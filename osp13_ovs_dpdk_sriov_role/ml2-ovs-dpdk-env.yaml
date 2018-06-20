@@ -1,0 +1,12 @@
+parameter_defaults:
+  ComputeOvsDpdkSriovParameters:
+    NovaReservedHostMemory: 4096
+    OvsPmdCoreList: "40,84,33,77"
+    KernelArgs: "default_hugepagesz=1GB hugepagesz=1G hugepages=126 intel_iommu=on iommu=pt isolcpus=2-43,46-87"
+    NovaVcpuPinSet: ['2-32','34-39','41-43','46-76','78-83','85-87']
+    IsolCpusList: "2-43,46-87"
+    OvsDpdkMemoryChannels: "4"
+    OvsDpdkSocketMemory: "2048,2048"
+    OvsDpdkCoreList: "0,44,1,45"
+    TunedProfileName: "cpu-partitioning"
+    VhostuserSocketGroup: hugetlbfs

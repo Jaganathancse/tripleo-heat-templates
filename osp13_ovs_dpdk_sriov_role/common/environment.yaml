@@ -1,0 +1,27 @@
+parameter_defaults:
+  ControllerCount: 1
+  #ComputeOvsDpdkCount: 1
+  ComputeOvsDpdkSriovCount: 2
+  OvercloudControlFlavor: control
+  #OvercloudComputeOvsDpdkFlavor: computeovsdpdk
+  OvercloudComputeOvsDpdkSriovFlavor: computeovsdpdksriov
+
+  # NeutronBridgeMappings translates to neutron::agents::ml2::ovs::bridge_mappings
+  NeutronBridgeMappings: "tenant_dpdk:br-link0,tenant:br-link1"
+  # NeutronFlatNetworks translates to neutron::plugins::ml2::flat_networks
+  NeutronFlatNetworks: "datacentre"
+  # NeutronNetworkType translates to neutron::plugins::ml2::tenant_network_types
+  NeutronNetworkType: 'vlan'
+  # NeutronTunnelTypes translates to neutron::agents::ml2::ovs::tunnel_types
+  NeutronTunnelTypes: ""
+
+  NeutronMechanismDrivers: "openvswitch,sriovnicswitch"
+  NovaSchedulerDefaultFilters: ['RetryFilter','AvailabilityZoneFilter','RamFilter','ComputeFilter','ComputeCapabilitiesFilter','ImagePropertiesFilter','ServerGroupAntiAffinityFilter','ServerGroupAffinityFilter','PciPassthroughFilter','NUMATopologyFilter']
+  NovaSchedulerAvailableFilters: ["nova.scheduler.filters.all_filters","nova.scheduler.filters.pci_passthrough_filter.PciPassthroughFilter"]
+  NeutronOVSFirewallDriver: openvswitch
+  # MTU global configuration
+  NeutronGlobalPhysnetMtu: 9000
+  # DHCP provide metadata route to VM.
+  NeutronEnableIsolatedMetadata: true
+  # DHCP always provides metadata route to VM.
+  NeutronEnableForceMetadata: true
