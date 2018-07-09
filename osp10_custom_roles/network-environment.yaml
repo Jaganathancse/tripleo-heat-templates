@@ -1,0 +1,106 @@
+resource_registry:
+  OS::TripleO::ComputeOvsDpdk::Net::SoftwareConfig: nic-configs/computeovsdpdk.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Net::SoftwareConfig: nic-configs/computeovsdpdk.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: nic-configs/controller.yaml
+  OS::TripleO::Services::ComputeNeutronOvsDpdk: /usr/share/openstack-tripleo-heat-templates/puppet/services/neutron-ovs-dpdk-agent.yaml
+
+  # Port assignments for the computeovsdpdk role
+  OS::TripleO::ComputeOvsDpdk::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdk::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::ComputeOvsDpdk::Ports::ManagementPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdk::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdk::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::ComputeOvsDpdk::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+  # Port assignments for the computeovsdpdkmorecores role
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::ExternalPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::InternalApiPort: /usr/share/openstack-tripleo-heat-templates/network/ports/internal_api.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::ManagementPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::StorageMgmtPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::StoragePort: /usr/share/openstack-tripleo-heat-templates/network/ports/storage.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::Ports::TenantPort: /usr/share/openstack-tripleo-heat-templates/network/ports/tenant.yaml
+
+  OS::TripleO::ComputeOvsDpdk::NodeUserData: first-boot.yaml
+  OS::TripleO::ComputeOvsDpdkMoreCores::NodeUserData: first-boot.yaml
+  OS::TripleO::NodeExtraConfigPost: post-install.yaml
+
+parameter_defaults:
+
+  ControlPlaneDefaultRoute: "172.18.0.1"
+  ControlPlaneSubnetCidr: "24"
+  DnsServers: ['10.11.5.19']
+  EC2MetadataIp: "172.18.0.1"
+
+  ExternalAllocationPools: [{'start': '10.9.88.200', 'end': '10.9.88.251'}]
+  ExternalNetCidr: "10.9.88.0/24"
+  #ExternalNetworkVlanID: 135
+  NeutronExternalNetworkBridge: "''"
+  ExternalInterfaceDefaultRoute: "10.9.88.254"
+
+  InternalApiNetCidr: 100.10.81.0/24
+  StorageNetCidr: 100.10.82.0/24
+  StorageMgmtNetCidr: 100.10.83.0/24
+  TenantNetCidr: 100.10.84.0/24
+  InternalApiNetworkVlanID: 131
+  StorageNetworkVlanID: 132
+  StorageMgmtNetworkVlanID: 133
+  TenantNetworkVlanID: 134
+  InternalApiAllocationPools: [{'start': '100.10.81.10', 'end': '100.10.81.200'}]
+  StorageAllocationPools: [{'start': '100.10.82.10', 'end': '100.10.82.200'}]
+  StorageMgmtAllocationPools: [{'start': '100.10.83.10', 'end': '100.10.83.200'}]
+  TenantAllocationPools: [{'start': '100.10.84.10', 'end': '100.10.84.200'}]
+
+  OvercloudControlFlavor: control
+  OvercloudComputeOvsDpdkFlavor: computeovsdpdk
+  OvercloudComputeOvsDpdkMoreCoresFlavor: computeovsdpdkmorecores
+
+  ControllerCount: 1
+  ComputeOvsDpdkCount: 1
+  ComputeOvsDpdkMoreCoresCount: 1
+
+  # NeutronBridgeMappings translates to neutron::agents::ml2::ovs::bridge_mappings
+  NeutronBridgeMappings: "datacentre:br-ex,dpdknet:br-link"
+  # NeutronFlatNetworks translates to neutron::plugins::ml2::flat_networks
+  NeutronFlatNetworks: "datacentre"
+  # NeutronNetworkVLANRanges translates to neutron::plugins::ml2::network_vlan_ranges
+  NeutronNetworkVLANRanges: "dpdknet:210:214"
+  # NeutronNetworkType translates to neutron::plugins::ml2::tenant_network_types
+  NeutronNetworkType: 'vlan'
+  # NeutronTunnelTypes translates to neutron::agents::ml2::ovs::tunnel_types
+  NeutronTunnelTypes: ""
+
+  NeutronDatapathType: "netdev"                                                 
+  NeutronVhostuserSocketDir: "/var/lib/vhost_sockets"                           
+  NeutronDpdkDriverType: "vfio-pci"                                             
+  NovaSchedulerDefaultFilters: "RamFilter,ComputeFilter,AvailabilityZoneFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,PciPassthroughFilter,NUMATopologyFilter,AggregateInstanceExtraSpecsFilter"
+  
+  #ControllerHostnameFormat: 'control-%index%'
+  #ComputeOvsDpdkHostnameFormat: 'computeovsdpdk-%index%'
+  #ComputeOvsDpdkMoreCoresHostnameFormat: 'computeovsdpdkmorecores-%index%'
+
+  NovaReservedHostMemory: 4096
+  NeutronDpdkCoreList: "'36,80,29,73'"
+  ComputeOvsDpdkMoreCoresNeutronDpdkCoreList: "'40,84,33,77'"
+  ComputeKernelArgs: "default_hugepagesz=1GB hugepagesz=1G hugepages=126 iommu=pt intel_iommu=on"
+  NovaVcpuPinSet: ['2-29','30-35','37-41','46-72','74-79','81-85']
+  HostIsolatedCoreList: "2-41,46-85"
+  ComputeOvsDpdkMoreCoresHostIsolatedCoreList: "2-43,46-87"
+  NeutronDpdkMemoryChannels: "4"
+  NeutronDpdkSocketMemory: "'2048,1024'"
+  HostCpusList: "'0,44,1,45'"
+  ComputeOvsDpdkMoreCoresExtraConfig:
+    nova::compute::vcpu_pin_set: ['0-32','34-39','41-43','46-76','78-83','85-87']
+
+  # MTU global configuration                                                    
+  NeutronGlobalPhysnetMtu: 9000                                                 
+  # DHCP provide metadata route to VM.                                          
+  NeutronEnableIsolatedMetadata: true                                           
+  # DHCP always provides metadata route to VM.                                  
+  NeutronEnableForceMetadata: true                                              
+  # Set the storage backend of the overcloud                                    
+  GlanceBackend: 'file'                                                         
+  # Configure the classname of the firewall driver to use for implementing security groups.
+  NeutronOVSFirewallDriver: openvswitch                                         
+                                                                                
+  SshServerOptions:                                                             
+    UseDns: 'no'   
